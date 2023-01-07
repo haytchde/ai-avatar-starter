@@ -17,15 +17,6 @@ const generateAction = async (req, res) => {
         }),
       }
     );
-    // Check for different statuses to send proper payload
-    if (response.ok) {
-        const buffer = await response.buffer();
-        res.status(200).json({ image: buffer });
-    } else if (response.status === 503) {
-        const json = await response.json();
-        res.status(503).json(json);
-    } else {
-        const json = await response.json();
-        res.status(response.status).json({ error: response.statusText });
-    }
   };
+
+  export default generateAction;
