@@ -13,10 +13,6 @@ const Home = () => {
   const [retryCount, setRetryCount] = useState(maxRetries);
   const [finalPrompt, setFinalPrompt] = useState('');
 
-  const onChange = (event) => {
-    setInput(event.target.value);
-  };
-
   const generateAction = async () => {
     console.log('Generating...');
 
@@ -24,6 +20,7 @@ const Home = () => {
 
     setIsGenerating(true);
 
+    // If this is a retry request, take away retryCount
     if (retry > 0) {
       setRetryCount((prevState) => {
         if (prevState === 0) {
@@ -44,41 +41,76 @@ const Home = () => {
       body: JSON.stringify({ input }),
     });
 
+    // Everything should be returned in json
     const data = await response.json();
 
+    // If model still loading, drop that retry time
     if (response.status === 503) {
       setRetry(data.estimated_time);
       return;
     }
 
+    // If another error, drop error
     if (!response.ok) {
       console.log(`Error: ${data.error}`);
       setIsGenerating(false);
       return;
     }
 
-    // Set final prompt here
     setFinalPrompt(input);
-    // Remove content from input box
-    setInput('');
     setImg(data.image);
+    setInput('');
     setIsGenerating(false);
   };
+
+  // Helper to wait for number of seconds until we check model again
+  const sleep = (ms) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  };
+
+  const onChange = (event) => {
+    setInput(event.target.value);
+  };
+
+  useEffect(() => {
+    const runRetry = async () => {
+      if (retryCount === 0) {
+        console.log(
+          `Model still loading after ${maxRetries} retries. Try request again in 5 minutes.`
+        );
+        setRetryCount(maxRetries);
+        setIsGenerating(false);
+        return;
+      }
+
+      console.log(`Trying again in ${retry} seconds.`);
+
+      await sleep(retry * 1000);
+
+      await generateAction();
+    };
+
+    if (retry === 0) {
+      return;
+    }
+
+    runRetry();
+  }, [retry]);
 
   return (
     <div className="root">
       <Head>
-        <title>Harry generator</title>
+        <title>AI Avatar Generator | buildspace</title>
       </Head>
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Harry generator</h1>
+            <h1>Haytch generator</h1>
           </div>
           <div className="header-subtitle">
-            <h2>
-              Turn me into anyone you want! Use "haytchde" in the prompt
-            </h2>
+            <h2>Make an image of me doing anything! Use "haytchde" in prompt</h2>
           </div>
           <div className="prompt-container">
             <input className="prompt-box" value={input} onChange={onChange} />
@@ -102,7 +134,7 @@ const Home = () => {
         </div>
         {img && (
           <div className="output-content">
-            <Image src={img} width={512} height={512} alt={input} />
+            <Image src={img} width={512} height={512} alt={finalPrompt} />
             <p>{finalPrompt}</p>
           </div>
         )}
@@ -115,7 +147,7 @@ const Home = () => {
         >
           <div className="badge">
             <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p>build with buildspace</p>
+            <p><a href="https://twitter.com/haytchde" target="_blank">@haytchde</a></p>
           </div>
         </a>
       </div>
