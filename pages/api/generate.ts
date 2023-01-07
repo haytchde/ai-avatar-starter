@@ -1,34 +1,23 @@
-const bufferToBase64 = (buffer) => {
-  const base64 = buffer.toString('base64');
-  return `data:image/png;base64,${base64}`;
-};
-
 const generateAction = async (req, res) => {
-  console.log('Received request');
-
   const input = JSON.parse(req.body).input;
-
+  // Add fetch request to Hugging Face
   const response = await fetch(
     `https://api-inference.huggingface.co/models/haytch/sd-1-5-haytch`,
     {
       headers: {
         Authorization: `Bearer ${process.env.HF_AUTH_KEY}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'POST',
       body: JSON.stringify({
-        inputs: input,
-      }),
+        inputs: input
+      })
     }
   );
-
   // Check for different statuses to send proper payload
   if (response.ok) {
-    const buffer = await response.buffer();
-        // Convert to base64
-  const base64 = bufferToBase64(buffer);
-  // Make sure to change to base64
-    res.status(200).json({ image: base64 });
+    const buffer = await response.arrayBuffer();
+    res.status(200).json({ image: bufferToBase64(buffer) });
   } else if (response.status === 503) {
     const json = await response.json();
     res.status(503).json(json);
@@ -38,6 +27,12 @@ const generateAction = async (req, res) => {
   }
 };
 
-export default generateAction;
+const bufferToBase64 = (buffer: ArrayBuffer) => {
+  let arr = new Uint8Array(buffer);
+  const base64 = btoa(
+    arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
+  );
+  return `data:image/png;base64,${base64}`;
+};
 
-  // https://api-inference.huggingface.co/models/haytch/sd-1-5-haytch
+export default generateAction;
