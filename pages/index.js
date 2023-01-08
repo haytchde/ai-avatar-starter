@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import mixpanel from 'mixpanel-browser';
-
-// Enabling the debug mode flag is useful during implementation,
-// but it's recommended you remove it for production
-mixpanel.init('3d125cde8a93b243694e9f88ca3b2dce'); 
-mixpanel.track('Land');
 
 const Home = () => {
   // Max number of times we will retry for model loading (took my up to 5 mins)
@@ -76,7 +70,6 @@ const Home = () => {
   };
 
   const onChange = (event) => {
-    mixpanel.track('Generate-click');
     setInput(event.target.value);
   };
 
