@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import buildspaceLogo from '../assets/buildspace-logo.png';
 
 const Home = () => {
   // Max number of times we will retry for model loading (took my up to 5 mins)
   const maxRetries = 20;
-  const [input, setInput] = useState('portrait of haytchde as ironman');
+  const [input, setInput] = useState('portrait of haytchde as ');
   const [img, setImg] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -141,13 +140,12 @@ const Home = () => {
       </div>
       <div className="badge-container grow">
         <a
-          href="https://buildspace.so/builds/ai-avatar"
+          href="https://twitter.com/haytchde"
           target="_blank"
           rel="noreferrer"
         >
           <div className="badge">
-            <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p><a href="https://twitter.com/haytchde" target="_blank">@haytchde</a></p>
+            <p>@haytchde</p>
           </div>
         </a>
       </div>
