@@ -5,7 +5,7 @@ import Image from 'next/image';
 const Home = () => {
   // Max number of times we will retry for model loading (took my up to 5 mins)
   const maxRetries = 20;
-  const [input, setInput] = useState('portrait of haytchde excited, light blue eyes, skinny face, young man 27 years old, skill magic deepdream radiating a glowing aura stuff loot legends stylized digital illustration video game icon artstation lois van baarle, ilya kuvshinov, rossdraw');
+  const [input, setInput] = useState('portrait of haytchde, arty, greyscale with tint of blue');
   const [img, setImg] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -70,6 +70,7 @@ const Home = () => {
   };
 
   const onChange = (event) => {
+    // mixpanel.track("Generate-click");
     setInput(event.target.value);
   };
 
@@ -101,12 +102,12 @@ const Home = () => {
   return (
     <div className="root">
       <Head>
-        <title>AI Avatar Generator | buildspace</title>
+        <title>HaytchAI generator</title>
       </Head>
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Haytch generator</h1>
+            <h1>Haytch AI generator</h1>
           </div>
           <div className="header-subtitle">
             <h2>Make an image of me doing anything! Use "haytchde" in prompt</h2>
