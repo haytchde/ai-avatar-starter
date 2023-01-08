@@ -5,7 +5,7 @@ import Image from 'next/image';
 const Home = () => {
   // Max number of times we will retry for model loading (took my up to 5 mins)
   const maxRetries = 20;
-  const [input, setInput] = useState('portrait of haytchde as ironman');
+  const [input, setInput] = useState('portrait of haytchde excited, light blue eyes, skinny face, young man 27 years old, skill magic deepdream radiating a glowing aura stuff loot legends stylized digital illustration video game icon artstation lois van baarle, ilya kuvshinov, rossdraw');
   const [img, setImg] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [retry, setRetry] = useState(0);
