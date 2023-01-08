@@ -6,7 +6,7 @@ import buildspaceLogo from '../assets/buildspace-logo.png';
 const Home = () => {
   // Max number of times we will retry for model loading (took my up to 5 mins)
   const maxRetries = 20;
-  const [input, setInput] = useState('portrait of haytchde');
+  const [input, setInput] = useState('portrait of haytchde as ironman');
   const [img, setImg] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [retry, setRetry] = useState(0);
